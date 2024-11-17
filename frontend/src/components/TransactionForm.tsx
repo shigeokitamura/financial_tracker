@@ -7,6 +7,7 @@ interface TransactionFormProps {
   initialData?: Transaction;
   categories: Category[];
   paymentMethods: PaymentMethod[];
+  isSubmitting?: boolean;
 }
 
 export function TransactionForm({
@@ -14,6 +15,7 @@ export function TransactionForm({
   initialData,
   categories,
   paymentMethods,
+  isSubmitting = false,
 }: TransactionFormProps) {
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: initialData,
@@ -50,6 +52,20 @@ export function TransactionForm({
         {errors.amount && (
           <p className="mt-1 text-sm text-red-600">{errors.amount.message}</p>
         )}
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Currency
+            <select
+              {...register('currency')}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            >
+              <option value="USD">USD</option>
+              <option value="CAD">CAD</option>
+              <option value="JPY">JPY</option>
+            </select>
+          </label>
+        </div>
       </div>
 
       <div>
@@ -116,12 +132,23 @@ export function TransactionForm({
         </label>
       </div>
 
-      <button
-        type="submit"
-        className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-      >
-        {initialData ? 'Update' : 'Create'} Transaction
-      </button>
+      <div className="flex justify-end gap-3">
+        <button
+          type="button"
+          onClick={() => onSubmit}
+          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        >
+          {isSubmitting ? 'Creating...' : 'Create'} Transaction
+        </button>
+      </div>
     </form>
   );
 }
