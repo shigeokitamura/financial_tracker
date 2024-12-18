@@ -4,6 +4,7 @@ import { TransactionForm } from './TransactionForm';
 import { useCategories } from '../hooks/useCategories';
 import { usePaymentMethods } from '../hooks/usePaymentMethods';
 import { useTransactions } from '../hooks/useTransactions';
+import { TransactionCreateParams } from '../types';
 
 interface TransactionCreateProps {
   isOpen: boolean;
@@ -15,17 +16,12 @@ export function TransactionCreate({ isOpen, onClose }: TransactionCreateProps) {
   const { createTransaction } = useTransactions();
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: TransactionCreateParams) => {
     try {
-      const modifiedData = {
-        ...data,
-        category_id: data.category,
-        payment_method_id: data.payment_method,
-      };
-
-      await createTransaction.mutateAsync(modifiedData);
+      await createTransaction.mutateAsync(data);
       onClose();
     } catch (err) {
+      console.error(err);
       setError("Failed to create a transaction. Please try again later.");
     }
   };

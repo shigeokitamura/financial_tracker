@@ -1,5 +1,5 @@
 import { apiClient } from "./client";
-import { Transaction } from "../types";
+import { Transaction, TransactionCreateParams } from "../types";
 
 interface TransactionFilters {
   category_id?: number;
@@ -19,7 +19,7 @@ export const transactionApi = {
     return data;
   },
 
-  create: async (transaction: Omit<Transaction, 'id' | 'created_at'>) => {
+  create: async (transaction: TransactionCreateParams) => {
     const { data } = await apiClient.post<Transaction>('/transactions', { transaction });
     return data;
   },

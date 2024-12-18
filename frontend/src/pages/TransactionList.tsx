@@ -1,13 +1,10 @@
-// import React, { useState } from 'react';
 import { useState } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
-import { TransactionFilters } from '../types';
 import { TransactionCreate } from '../components/TransactionCreate';
 
 export function TransactionList() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [filters, _setFilters] = useState<TransactionFilters>({});
-  const { transactions, deleteTransaction } = useTransactions(filters);
+  const { transactions, deleteTransaction } = useTransactions();
 
   if (transactions.isLoading) {
     return <div>Loading...</div>;

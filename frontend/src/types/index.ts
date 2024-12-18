@@ -30,6 +30,16 @@ export interface Transaction {
   created_at: string;
 }
 
+export interface TransactionCreateParams {
+  amount: number;
+  currency: string;
+  title: string;
+  date: string;
+  description?: string;
+  category_id: number;
+  payment_method_id: number;
+}
+
 export interface TransactionFilters {
   category_id?: number;
   payment_method_id?: number;
