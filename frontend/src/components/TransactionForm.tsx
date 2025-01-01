@@ -1,9 +1,9 @@
 import { useForm } from 'react-hook-form';
-import { Category, PaymentMethod, TransactionCreateParams } from '../types';
+import { Category, PaymentMethod, TransactionCreateParams, TransactionEditParams } from '../types';
 
 interface TransactionFormProps {
   onSubmit: (data: TransactionCreateParams) => void;
-  initialData?: TransactionCreateParams;
+  initialData?: TransactionEditParams;
   categories: Category[];
   paymentMethods: PaymentMethod[];
   isSubmitting?: boolean;
