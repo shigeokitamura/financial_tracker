@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
   get "auth/:provider/callback", to: "sessions#create"
   get "auth/failure", to: redirect("/")
-  post "logout", to: "sessions#destroy", as "logout"
+  post "logout", to: "sessions#destroy", as: "logout"
 
   namespace :api do
     namespace :v1 do
