@@ -6,7 +6,7 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - ./backend:/rails
+      - ./backend:/app
     depends_on:
       - db
     environment:
