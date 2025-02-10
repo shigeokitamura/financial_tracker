@@ -7,4 +7,12 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  get "/auth/:provider/callback", to: "sessions#create"
+
+  namespace :api do
+    namespace :v1 do
+      get "users/current", to: "users#current_user"
+    end
+  end
 end
