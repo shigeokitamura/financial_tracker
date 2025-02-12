@@ -8,7 +8,7 @@ class ApplicationController < ActionController::API
     header = header.split(" ").last if header
 
     begin
-      @decoded = JWT.decode(header)
+      @decoded = JWT.decode(header, ENV["JWT_SECRET_KEY"], true, { algorithm: "HS256" }).first
       if @decoded["provider"] == "guest"
         @current_user = User.find(@decoded["user_id"])
       else

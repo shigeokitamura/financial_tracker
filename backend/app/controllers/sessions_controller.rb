@@ -5,7 +5,7 @@ class SessionsController < ApplicationController
     frontend_url = ENV["FRONTEND_URL"]
     user_info = request.env["omniauth.auth"]
     google_user_id = user_info["uid"]
-    google_user_email = user_info["email"]
+    google_user_email = user_info["info"]["email"]
     provider = user_info["provider"]
     token = generate_token_with_google_user_id(google_user_id, provider)
 

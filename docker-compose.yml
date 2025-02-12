@@ -10,6 +10,8 @@ services:
       - "5433:5432"
 
   backend:
+    tty: true
+    stdin_open: true
     build:
       context: ./backend
       dockerfile: Dockerfile
