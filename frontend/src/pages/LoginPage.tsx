@@ -14,7 +14,7 @@ const LoginPage: React.FC = () => {
 
     if (token) {
       setToken(token);
-      localStorage.setItem("auth", token);
+      localStorage.setItem("authToken", token);
 
       navigate("/transactions");
     }
