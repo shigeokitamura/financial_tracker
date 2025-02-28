@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import Sidebar from "../partials/Sidebar";
 import Header from "../partials/Header";
 import { useTransactions } from "../hooks/useTransactions";
+import ModalTransaction from "../components/ModalTransaction";
 
-const TransactionsPage: React.FC = () => {
+const TransactionsPage: React.FC = (variant = "default") => {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { transactions } = useTransactions();
+
+  const [transactionModalOpen, setTransactionModalOpen] = useState(false)
 
   const DataRows = () => {
     if (transactions.isLoading) {
@@ -64,6 +67,19 @@ const TransactionsPage: React.FC = () => {
               <div className="mb-4 sm:mb-0">
                 <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">Transactions</h1>
               </div>
+
+              <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
+                <button
+                  className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white"
+                  onClick={(e) => { e.stopPropagation(); setTransactionModalOpen(true); }}
+                  aria-controls="transaction-modal"
+                >
+                  <svg className="fill-current shrink-0 xs:hidden" width="16" height="16" viewBox="0 0 16 16">
+                    <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
+                  </svg>
+                  <span className="max-xs:sr-only">Add Transaction</span>
+                </button>
+              </div>
             </div>
             <div className="col-span-full xl:col-span-8 bg-white dark:bg-gray-800 shadow-xs rounded-xl">
               <div className="p-3">
@@ -108,7 +124,13 @@ const TransactionsPage: React.FC = () => {
           </div>
         </main>
       </div>
-
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className={`flex items-center justify-between h-16 ${variant === 'v2' || variant === 'v3' ? '' : 'lg:border-b border-gray-200 dark:border-gray-700/60'}`}>
+          <div className="flex items-center space-x-3">
+            <ModalTransaction modalOpen={transactionModalOpen} setModalOpen={setTransactionModalOpen} />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
