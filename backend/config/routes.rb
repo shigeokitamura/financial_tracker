@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       get "users/current", to: "users#current_user"
 
       resources :transactions
+      resources :categories, only: :index
       resources :payment_methods, only: :index
     end
   end
