@@ -7,6 +7,5 @@ class CreatePaymentMethods < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    add_index :payment_methods, :name, unique: true
   end
 end
