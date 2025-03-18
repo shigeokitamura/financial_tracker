@@ -49,3 +49,4 @@ gem 'omniauth-google-oauth2'
 gem 'jwt'
 
 gem 'rswag'
+gem 'ostruct'
