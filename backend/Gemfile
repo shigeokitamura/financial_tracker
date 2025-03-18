@@ -40,6 +40,8 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem 'pry', '~> 0.15.0'
+
+  gem 'rspec-rails', '~> 7.0.0'
 end
 
 gem 'dotenv-rails'
