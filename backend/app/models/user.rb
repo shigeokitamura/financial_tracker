@@ -4,8 +4,10 @@ class User < ApplicationRecord
   has_many :payment_methods, dependent: :destroy
 
   validates :email, presence: true, uniqueness: true,
-            format: { with: URI::MailTo::EMAIL_REGEXP } 
+            format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :name, presence: true
+
+  after_create :create_default_categories_and_payment_methods
 
   private
 
