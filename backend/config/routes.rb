@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get "users/current", to: "users#current_user"
+
+      resources :transactions
     end
   end
 end
