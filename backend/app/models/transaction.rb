@@ -21,4 +21,6 @@ class Transaction < ApplicationRecord
   validates :date, presence: true
   validates :amount, presence: true, numericality: true
   validates :currency, presence: true, inclusion: { in: CURRENCIES.keys }
+
+  attribute :amount, :float
 end
