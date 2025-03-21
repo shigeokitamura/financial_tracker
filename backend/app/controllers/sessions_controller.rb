@@ -13,11 +13,11 @@ class SessionsController < ApplicationController
 
     if user
       Rails.logger.info("User Found")
-      redirect_to "#{frontend_url}/transactions?token=#{token}", allow_other_host: true
+      redirect_to "#{frontend_url}/?token=#{token}", allow_other_host: true
     else
       Rails.logger.info("User Not Found")
       user = User.create(email: google_user_email, name: google_user_email, provider: provider, uid: google_user_id)
-      redirect_to "#{frontend_url}/transactions?token=#{token}", allow_other_host: true
+      redirect_to "#{frontend_url}/?token=#{token}", allow_other_host: true
     end
   end
 

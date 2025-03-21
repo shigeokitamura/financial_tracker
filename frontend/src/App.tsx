@@ -1,4 +1,3 @@
-import './App.css'
 import { AuthProvider } from './providers/auth'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import VitePage from './pages/VitePage'

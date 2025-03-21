@@ -1,27 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { BACKEND_URL } from "../config/settings";
 
-interface AuthContextType {
-  token: string,
-  currentUser: any;
-  logout: () => void;
-  setToken: React.Dispatch<React.SetStateAction<string>>;
-  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-}
-
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
-
 interface UserResponse {
   id: number,
   email: string,
@@ -42,6 +21,27 @@ interface User {
 
 interface APIResponse {
   user: UserResponse;
+}
+
+interface AuthContextType {
+  token: string,
+  currentUser: User | null;
+  logout: () => void;
+  setToken: React.Dispatch<React.SetStateAction<string>>;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
+}
+
+interface AuthProviderProps {
+  children: React.ReactNode;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 }
 
 const convertToUser = (response: UserResponse): User => {
