@@ -1,7 +1,6 @@
 require "swagger_helper"
 
 RSpec.describe "api/v1/transactions", type: :request do
-
   let(:user) { create(:user) }
   let(:token) { JWT.encode({ user_id: user.id, provider: "guest" }, ENV["JWT_SECRET_KEY"], "HS256") }
 
@@ -29,7 +28,7 @@ RSpec.describe "api/v1/transactions", type: :request do
               created_at: { type: :string },
               updated_at: { type: :string },
               payment_method_id: { type: :integer },
-              category_id: { type: :integer },
+              category_id: { type: :integer }
             }
           }
 
@@ -67,7 +66,7 @@ RSpec.describe "api/v1/transactions", type: :request do
               category_id: { type: :integer, example: 1 },
               payment_method_id: { type: :integer, example: 1 }
             },
-            required: ["name", "date", "amount", "currency", "category_id", "payment_method_id"]
+            required: [ "name", "date", "amount", "currency", "category_id", "payment_method_id" ]
           }
         }
       }
@@ -83,7 +82,7 @@ RSpec.describe "api/v1/transactions", type: :request do
               currency: "USD",
               description: "Description of the transaction",
               category_id: user.categories.sample.id,
-              payment_method_id: user.payment_methods.sample.id,
+              payment_method_id: user.payment_methods.sample.id
             }
           }
         }
@@ -101,7 +100,7 @@ RSpec.describe "api/v1/transactions", type: :request do
               currency: "USD",
               description: "Description of the transaction",
               category_id: user.categories.sample.id,
-              payment_method_id: user.payment_methods.sample.id,
+              payment_method_id: user.payment_methods.sample.id
             }
           }
         }
@@ -137,7 +136,7 @@ RSpec.describe "api/v1/transactions", type: :request do
             created_at: { type: :string },
             updated_at: { type: :string },
             payment_method_id: { type: :integer },
-            category_id: { type: :integer },
+            category_id: { type: :integer }
           }
 
         run_test!
@@ -177,7 +176,7 @@ RSpec.describe "api/v1/transactions", type: :request do
               description: { type: :string, example: "Upated description of the transaction" },
               category_id: { type: :integer, example: 1 },
               payment_method_id: { type: :integer, example: 1 }
-            },
+            }
           }
         }
       }
@@ -194,7 +193,7 @@ RSpec.describe "api/v1/transactions", type: :request do
               currency: "USD",
               description: "Updated description of the transaction",
               category_id: user.categories.sample.id,
-              payment_method_id: user.payment_methods.sample.id,
+              payment_method_id: user.payment_methods.sample.id
             }
           }
         }
