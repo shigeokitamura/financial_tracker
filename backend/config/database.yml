@@ -88,6 +88,8 @@ test:
 #
 production:
   <<: *default
-  database: backend_production
-  username: backend
-  password: <%= ENV["BACKEND_DATABASE_PASSWORD"] %>
+  database: finantial_tracker_app_production
+  host: <%= ENV.fetch("BACKEND_DATABASE_HOST") %>
+  port: <%= ENV.fetch("BACKEND_DATABASE_PORT") %>
+  username: <%= ENV.fetch("BACKEND_DATABASE_USERNAME") %>
+  password: <%= ENV.fetch("BACKEND_DATABASE_PASSWORD") %>
