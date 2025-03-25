@@ -30,8 +30,14 @@ const LoginPage: React.FC = () => {
     form.submit();
   };
 
-  const handleGuestLogin = () => {
-    window.alert("Not available yet.");
+  const handleGuestLogin = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    e.preventDefault();
+
+    const form = document.createElement("form");
+    form.method = "GET";
+    form.action = `${BACKEND_URL}/auth/guest`;
+    document.body.appendChild(form);
+    form.submit();
   }
 
   return (
