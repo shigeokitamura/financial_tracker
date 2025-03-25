@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import Transition from "../utils/Transition";
 import { Transaction, TransactionRequestParams } from "../types/transaction";
 import { useTransactions } from "../hooks/useTransactions";
+import { useCategories } from "../hooks/useCategories";
+import { usePaymentMethods } from "../hooks/usePaymentMethods";
 
 interface ModalTransactionProps {
   modalOpen: boolean,
@@ -18,24 +20,6 @@ interface FormState {
   categoryId: number;
   paymentMethodId: number;
 };
-
-// Mock
-const CATEGORIES = [
-  { id: 8, name: "Food Expenses" },
-  { id: 9, name: "Transportation Expenses" },
-  { id: 10, name: "Housing Expenses" },
-  { id: 11, name: "Entertainment Expenses" },
-  { id: 12, name: "Medical Expenses" },
-  { id: 13, name: "UtilEducation Espensesities" },
-  { id: 14, name: "Incomes" }
-];
-
-const PAYMENT_METHODS = [
-  { id: 5, name: "Cash" },
-  { id: 6, name: "Credit / Debit" },
-  { id: 7, name: "E-money" },
-  { id: 8, name: "Bank Transfer" }
-];
 
 const CURRENCIES = [
   "AUD",
@@ -68,6 +52,8 @@ function ModalTransaction({
   const modalContent = useRef<HTMLDivElement>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const { createTransaction, updateTransaction, deleteTransaction } = useTransactions();
+  const { categories } = useCategories();
+  const { paymentMethods } = usePaymentMethods();
 
   const [formState, setFormState] = useState<FormState>({
     name: "",
@@ -330,7 +316,7 @@ function ModalTransaction({
                 className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white mb-2"
               >
                 <option value={0}></option>
-                {CATEGORIES.map(category => (
+                {categories.data?.map(category => (
                   <option key={category.name} value={category.id}>
                     {category.name}
                   </option>
@@ -346,7 +332,7 @@ function ModalTransaction({
                 className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white mb-2"
               >
                 <option value={0}></option>
-                {PAYMENT_METHODS.map(paymentMethod => (
+                {paymentMethods.data?.map(paymentMethod => (
                   <option key={paymentMethod.name} value={paymentMethod.id}>
                     {paymentMethod.name}
                   </option>
