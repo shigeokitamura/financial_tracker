@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_action :require_login, only: [ :create ]
+  skip_before_action :require_login, only: [ :create, :guest ]
 
   def create
     frontend_url = ENV["FRONTEND_URL"]
@@ -21,11 +21,25 @@ class SessionsController < ApplicationController
     end
   end
 
+  def guest
+    frontend_url = ENV["FRONTEND_URL"]
+    user = User.find_by!(name: "Guest", email: "guest@example.com")
+    token = generate_token_with_user_id(user.id, "guest")
+    redirect_to "#{frontend_url}/?token=#{token}", allow_other_host: true
+  end
+
   private
 
   def generate_token_with_google_user_id(google_user_id, provider)
     exp = Time.now.to_i + 24 * 3600
     payload = { google_user_id: google_user_id, provider: provider, exp: exp }
+    hmac_secret = ENV["JWT_SECRET_KEY"]
+    JWT.encode(payload, hmac_secret, "HS256")
+  end
+
+  def generate_token_with_user_id(user_id, provider)
+    exp = Time.now.to_i + 24 * 3600
+    payload = { user_id: user_id, provider: provider, exp: exp }
     hmac_secret = ENV["JWT_SECRET_KEY"]
     JWT.encode(payload, hmac_secret, "HS256")
   end
