@@ -3,6 +3,8 @@ import Sidebar from "../partials/Sidebar";
 import Header from "../partials/Header";
 import { useTransactions } from "../hooks/useTransactions";
 import ModalTransaction from "../components/ModalTransaction";
+import { Link } from "react-router-dom";
+import { Transaction } from "../types/transaction";
 
 const TransactionsPage: React.FC = (variant = "default") => {
 
@@ -10,6 +12,17 @@ const TransactionsPage: React.FC = (variant = "default") => {
   const { transactions } = useTransactions();
 
   const [transactionModalOpen, setTransactionModalOpen] = useState(false)
+  const [transactionData, setTransactionData] = useState<Transaction | undefined>(undefined)
+
+  const handleAddTransaction = () => {
+    setTransactionData(undefined)
+    setTransactionModalOpen(true);
+  }
+
+  const handleEditTransaction = (transaction: Transaction) => {
+    setTransactionData(transaction);
+    setTransactionModalOpen(true);
+  }
 
   const DataRows = () => {
     if (transactions.isLoading) {
@@ -47,7 +60,13 @@ const TransactionsPage: React.FC = (variant = "default") => {
               <div className="text-center">{transaction.paymentMethodId}</div>
             </td>
             <td className="p-2">
-              <div className="text-center">Edit</div>
+              <Link
+                className="text-center"
+                to={`#${transaction.id}`}
+                onClick={(e) => {e.stopPropagation(); handleEditTransaction(transaction)}}
+              >
+                <span>Edit</span>
+              </Link>
             </td>
           </tr>
         ))}
@@ -71,7 +90,7 @@ const TransactionsPage: React.FC = (variant = "default") => {
               <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
                 <button
                   className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white"
-                  onClick={(e) => { e.stopPropagation(); setTransactionModalOpen(true); }}
+                  onClick={(e) => { e.stopPropagation(); handleAddTransaction(); }}
                   aria-controls="transaction-modal"
                 >
                   <svg className="fill-current shrink-0 xs:hidden" width="16" height="16" viewBox="0 0 16 16">
@@ -127,7 +146,11 @@ const TransactionsPage: React.FC = (variant = "default") => {
       <div className="px-4 sm:px-6 lg:px-8">
         <div className={`flex items-center justify-between h-16 ${variant === 'v2' || variant === 'v3' ? '' : 'lg:border-b border-gray-200 dark:border-gray-700/60'}`}>
           <div className="flex items-center space-x-3">
-            <ModalTransaction modalOpen={transactionModalOpen} setModalOpen={setTransactionModalOpen} />
+            <ModalTransaction
+              modalOpen={transactionModalOpen}
+              setModalOpen={setTransactionModalOpen}
+              transactionData={transactionData}
+            />
           </div>
         </div>
       </div>

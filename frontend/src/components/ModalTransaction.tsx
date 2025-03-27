@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import Transition from "../utils/Transition";
-import { TransactionRequestParams } from "../types/transaction";
-import { transactionsApi } from "../api/transactions";
+import { Transaction, TransactionRequestParams } from "../types/transaction";
+import { useTransactions } from "../hooks/useTransactions";
 
 interface ModalTransactionProps {
   modalOpen: boolean,
   setModalOpen: (open: boolean) => void;
-  onSuccess?: () => void;
+  transactionData?: Transaction;
 }
 
 interface FormState {
@@ -62,11 +62,12 @@ function formatDate(date: Date): string {
 function ModalTransaction({
   modalOpen,
   setModalOpen,
-  onSuccess,
+  transactionData,
 }: ModalTransactionProps) {
 
   const modalContent = useRef<HTMLDivElement>(null);
   const searchInput = useRef<HTMLInputElement>(null);
+  const { createTransaction, updateTransaction } = useTransactions();
 
   const [formState, setFormState] = useState<FormState>({
     name: "",
@@ -79,7 +80,7 @@ function ModalTransaction({
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [_error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -90,12 +91,9 @@ function ModalTransaction({
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
-
+  const validateForm = () => {
     const errors = [];
+
     if (!formState.name) errors.push("Name is required");
     if (!formState.date) errors.push("Date is required");
     if (formState.amount <= 0) errors.push("Amount must be greater than 0");
@@ -103,34 +101,93 @@ function ModalTransaction({
     if (formState.categoryId == 0) errors.push("Category is required");
     if (formState.paymentMethodId == 0) errors.push("Payment method is required");
 
+    return errors
+  }
+
+  function convertFormStateToTransactionRequestParams(): TransactionRequestParams {
+    return {
+      name: formState.name,
+      date: new Date(formState.date),
+      amount: formState.amount,
+      currency: formState.currency,
+      description: formState.description,
+      category_id: formState.categoryId,
+      payment_method_id: formState.paymentMethodId
+    };
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+
+    const errors = validateForm();
+
     try {
       if (errors.length > 0) {
         window.alert(errors.join("\n"));
         throw new Error(errors.join("\n"));
       }
 
-      const transactionData: TransactionRequestParams = {
-        name: formState.name,
-        date: new Date(formState.date),
-        amount: formState.amount,
-        currency: formState.currency || "",
-        description: formState.description || "",
-        category_id: formState.categoryId,
-        payment_method_id: formState.paymentMethodId
-      };
-
-      await transactionsApi.create(transactionData);
-
-      if (onSuccess) {
-        setModalOpen(false);
-        onSuccess();
-      }
+      await createTransaction.mutateAsync(convertFormStateToTransactionRequestParams());
+      setModalOpen(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred while creating the transaction.");
     } finally {
       setIsSubmitting(false);
     }
   }
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+
+    const errors = validateForm();
+
+    try {
+      if (errors.length > 0) {
+        window.alert(errors.join("\n"));
+        throw new Error(errors.join("\n"));
+      }
+
+      await updateTransaction.mutateAsync({
+        id: transactionData!.id,
+        data: convertFormStateToTransactionRequestParams(),
+      });
+
+      setModalOpen(false);
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred while creating the transaction.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  useEffect(() => {
+    if (transactionData) {
+      setFormState({
+        name: transactionData.name,
+        date: transactionData.date.toString(),
+        amount: transactionData.amount,
+        currency: transactionData.currency,
+        description: transactionData.description,
+        categoryId: transactionData.categoryId,
+        paymentMethodId: transactionData.paymentMethodId
+      });
+    } else {
+      setFormState({
+        name: "",
+        date: formatDate(new Date()),
+        amount: 0.0,
+        currency: "",
+        description: "",
+        categoryId: 0,
+        paymentMethodId: 0
+      });
+    }
+  }, [transactionData]);
 
   // close on click outside
   useEffect(() => {
@@ -191,7 +248,9 @@ function ModalTransaction({
         >
           <div className="py-4 px-2">
             <div className="mb-3 last:mb-0">
-              <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">Add Transaction</h1>
+              <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
+                { transactionData?.id ? "Edit Transaction" :  "Add Transaction" }
+              </h1>
             </div>
             <div className="mb-3 last:mb-0">
               <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase px-2 text-left">Name</div>
@@ -289,14 +348,25 @@ function ModalTransaction({
             </div>
 
             <div className="mb-3 last:mb-0">
-              <button
-                className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white"
-                type="submit"
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-              >
-                Submit
-              </button>
+              { transactionData ? (
+                <button
+                  className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white"
+                  type="submit"
+                  onClick={handleUpdate}
+                  disabled={isSubmitting}
+                >
+                  Update
+                </button>
+              ) : (
+                <button
+                  className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white"
+                  type="submit"
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                >
+                  Submit
+                </button>
+              ) }
             </div>
           </div>
         </div>
