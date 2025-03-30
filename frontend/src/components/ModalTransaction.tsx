@@ -67,7 +67,7 @@ function ModalTransaction({
 
   const modalContent = useRef<HTMLDivElement>(null);
   const searchInput = useRef<HTMLInputElement>(null);
-  const { createTransaction, updateTransaction } = useTransactions();
+  const { createTransaction, updateTransaction, deleteTransaction } = useTransactions();
 
   const [formState, setFormState] = useState<FormState>({
     name: "",
@@ -161,6 +161,24 @@ function ModalTransaction({
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred while creating the transaction.");
     } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  const handleDelete = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    if (window.confirm("Are you sure you want to delete this transaction?")) {
+      try {
+        await deleteTransaction.mutateAsync(transactionData!.id);
+        setModalOpen(false);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred while deleting the transaction.");
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else {
       setIsSubmitting(false);
     }
   }
@@ -285,14 +303,14 @@ function ModalTransaction({
                   required
                   value={formState.amount}
                   onChange={handleChange}
-                  className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white mb-2"
+                  className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 mr-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white mb-2"
                 />
                 <select
                   id="currency"
                   name="currency"
                   value={formState.currency}
                   onChange={handleChange}
-                  className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white mb-2"
+                  className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 ml-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white mb-2"
                 >
                   <option value=""></option>
                   {CURRENCIES.map(currency => (
@@ -349,14 +367,24 @@ function ModalTransaction({
 
             <div className="mb-3 last:mb-0">
               { transactionData ? (
-                <button
-                  className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white"
-                  type="submit"
-                  onClick={handleUpdate}
-                  disabled={isSubmitting}
-                >
-                  Update
+                <div>
+                  <button
+                    className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white mx-2"
+                    type="submit"
+                    onClick={handleUpdate}
+                    disabled={isSubmitting}
+                  >
+                    Update
+                  </button>
+                  <button
+                    className="btn bg-red-500 text-white hover:bg-red-700 dark:bg-red-500 dark:text-white dark:hover:bg-red-700 mx-2"
+                    type="submit"
+                    onClick={handleDelete}
+                    disabled={isSubmitting}
+                  >
+                    Delete
                 </button>
+              </div>
               ) : (
                 <button
                   className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white"
