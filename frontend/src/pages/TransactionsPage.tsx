@@ -25,6 +25,47 @@ const TransactionsPage: React.FC = (variant = "default") => {
   }
 
   const DataRows = () => {
+    // Mock
+    const CATEGORIES = [
+      { id: 8, name: "Food Expenses" },
+      { id: 9, name: "Transportation Expenses" },
+      { id: 10, name: "Housing Expenses" },
+      { id: 11, name: "Entertainment Expenses" },
+      { id: 12, name: "Medical Expenses" },
+      { id: 13, name: "UtilEducation Espensesities" },
+      { id: 14, name: "Incomes" }
+    ];
+
+    const PAYMENT_METHODS = [
+      { id: 5, name: "Cash" },
+      { id: 6, name: "Credit / Debit" },
+      { id: 7, name: "E-money" },
+      { id: 8, name: "Bank Transfer" }
+    ];
+    const formatCurrency = (amount: number, currency: string): string => {
+      console.log(currency)
+      if (["AUD", "CAD", "HKD", "TWD", "USD"].includes(currency)) {
+        return `$${amount} ${currency}`
+      }
+      if (["CNY", "JPY"].includes(currency)) {
+        return `¥${amount} ${currency}`
+      }
+      if (currency === "EUR") {
+        return `€${amount} ${currency}`
+      }
+      if (currency == "GBP") {
+        return `£${amount} ${currency}`
+      }
+      if (currency == "INR") {
+        return `₹${amount} ${currency}`
+      }
+      if (currency == "KRW") {
+        return `₩${amount} ${currency}`
+      }
+
+      return `${amount} ${currency}`
+    }
+
     if (transactions.isLoading) {
       return (
         <tr>Loading...</tr>
@@ -48,16 +89,16 @@ const TransactionsPage: React.FC = (variant = "default") => {
               <div className="text-center">{transaction.date.toString()}</div>
             </td>
             <td className="p-2">
-              <div className="text-center text-green-500">{transaction.amount}</div>
+              <div className="text-center text-green-500">{formatCurrency(transaction.amount, transaction.currency)}</div>
             </td>
             <td className="p-2">
               <div className="text-center text-sky-500">{transaction.description}</div>
             </td>
             <td className="p-2">
-              <div className="text-center">{transaction.categoryId}</div>
+              <div className="text-center">{CATEGORIES.find((category) => category.id === transaction.categoryId)?.name}</div>
             </td>
             <td className="p-2">
-              <div className="text-center">{transaction.paymentMethodId}</div>
+              <div className="text-center">{PAYMENT_METHODS.find((payment_method) => payment_method.id === transaction.paymentMethodId)?.name}</div>
             </td>
             <td className="p-2">
               <Link
