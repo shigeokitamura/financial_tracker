@@ -179,7 +179,7 @@ class CurrencyHistory < ApplicationRecord
     "AVAX" => "Avalanche",
     "MATIC" => "Matic Token",
     "LTC" => "Litecoin",
-    "ADA" => "Cardano",
+    "ADA" => "Cardano"
   }
 
   validates :currency, presence: true, inclusion: { in: CURRENCIES.keys }
