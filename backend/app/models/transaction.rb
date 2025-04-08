@@ -9,4 +9,12 @@ class Transaction < ApplicationRecord
   validates :currency, presence: true, inclusion: { in: CurrencyHistory::CURRENCIES }
 
   attribute :amount, :float
+
+  def in_usd
+    return amount if currency == "USD"
+
+    value = CurrencyHistory.find_by(currency: currency, date: date).value
+
+    value.nil? ? nil : (amount / value)
+  end
 end
