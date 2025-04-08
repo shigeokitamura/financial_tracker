@@ -53,3 +53,4 @@ gem "jwt"
 
 gem "rswag"
 gem "ostruct"
+gem "rest-client"
