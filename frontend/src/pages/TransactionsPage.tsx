@@ -5,11 +5,13 @@ import { useTransactions } from "../hooks/useTransactions";
 import ModalTransaction from "../components/ModalTransaction";
 import { Link } from "react-router-dom";
 import { Transaction } from "../types/transaction";
+import { usePaymentMethods } from "../hooks/usePaymentMethods";
 
 const TransactionsPage: React.FC = (variant = "default") => {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { transactions } = useTransactions();
+  const { paymentMethods } = usePaymentMethods();
 
   const [transactionModalOpen, setTransactionModalOpen] = useState(false)
   const [transactionData, setTransactionData] = useState<Transaction | undefined>(undefined)
@@ -36,12 +38,6 @@ const TransactionsPage: React.FC = (variant = "default") => {
       { id: 14, name: "Incomes" }
     ];
 
-    const PAYMENT_METHODS = [
-      { id: 5, name: "Cash" },
-      { id: 6, name: "Credit / Debit" },
-      { id: 7, name: "E-money" },
-      { id: 8, name: "Bank Transfer" }
-    ];
     const formatCurrency = (amount: number, currency: string): string => {
       console.log(currency)
       if (["AUD", "CAD", "HKD", "TWD", "USD"].includes(currency)) {
@@ -66,7 +62,7 @@ const TransactionsPage: React.FC = (variant = "default") => {
       return `${amount} ${currency}`
     }
 
-    if (transactions.isLoading) {
+    if (transactions.isLoading || paymentMethods.isLoading) {
       return (
         <tr>Loading...</tr>
       )
@@ -74,6 +70,9 @@ const TransactionsPage: React.FC = (variant = "default") => {
 
     if (transactions.isError) {
       return <tr>Error: {transactions.error.message}</tr>
+    }
+    if (paymentMethods.isError) {
+      return <tr>Error: {paymentMethods.error.message}</tr>
     }
 
     return (
@@ -98,7 +97,7 @@ const TransactionsPage: React.FC = (variant = "default") => {
               <div className="text-center">{CATEGORIES.find((category) => category.id === transaction.categoryId)?.name}</div>
             </td>
             <td className="p-2">
-              <div className="text-center">{PAYMENT_METHODS.find((payment_method) => payment_method.id === transaction.paymentMethodId)?.name}</div>
+              <div className="text-center">{paymentMethods.data?.find((payment_method) => payment_method.id === transaction.paymentMethodId)?.name}</div>
             </td>
             <td className="p-2">
               <Link
