@@ -4,5 +4,5 @@ class Category < ApplicationRecord
 
   validates :name, presence: true
   validates :name, uniqueness: { scope: :user_id,
-                                 message: "is already used by this user" } 
+                                 message: "is already used by this user" }
 end

@@ -14,7 +14,7 @@ class Transaction < ApplicationRecord
     "JPY" => "Japanese Yen",
     "KRW" => "Korean Won",
     "TWD" => "Taiwan Dollar",
-    "USD" => "US Dollar",
+    "USD" => "US Dollar"
   }
 
   validates :name, presence: true

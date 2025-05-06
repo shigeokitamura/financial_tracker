@@ -39,17 +39,17 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
-  gem 'pry', '~> 0.15.0'
+  gem "pry", "~> 0.15.0"
 
-  gem 'rspec-rails', '~> 7.0.0'
+  gem "rspec-rails", "~> 7.0.0"
   gem "factory_bot_rails"
 end
 
-gem 'dotenv-rails'
-gem 'omniauth'
-gem 'omniauth-rails_csrf_protection'
-gem 'omniauth-google-oauth2'
-gem 'jwt'
+gem "dotenv-rails"
+gem "omniauth"
+gem "omniauth-rails_csrf_protection"
+gem "omniauth-google-oauth2"
+gem "jwt"
 
-gem 'rswag'
-gem 'ostruct'
+gem "rswag"
+gem "ostruct"
