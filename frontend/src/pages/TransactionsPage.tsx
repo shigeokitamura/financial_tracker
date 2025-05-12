@@ -5,12 +5,14 @@ import { useTransactions } from "../hooks/useTransactions";
 import ModalTransaction from "../components/ModalTransaction";
 import { Link } from "react-router-dom";
 import { Transaction } from "../types/transaction";
+import { useCategories } from "../hooks/useCategories";
 import { usePaymentMethods } from "../hooks/usePaymentMethods";
 
 const TransactionsPage: React.FC = (variant = "default") => {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { transactions } = useTransactions();
+  const { categories } = useCategories();
   const { paymentMethods } = usePaymentMethods();
 
   const [transactionModalOpen, setTransactionModalOpen] = useState(false)
@@ -27,17 +29,6 @@ const TransactionsPage: React.FC = (variant = "default") => {
   }
 
   const DataRows = () => {
-    // Mock
-    const CATEGORIES = [
-      { id: 8, name: "Food Expenses" },
-      { id: 9, name: "Transportation Expenses" },
-      { id: 10, name: "Housing Expenses" },
-      { id: 11, name: "Entertainment Expenses" },
-      { id: 12, name: "Medical Expenses" },
-      { id: 13, name: "UtilEducation Espensesities" },
-      { id: 14, name: "Incomes" }
-    ];
-
     const formatCurrency = (amount: number, currency: string): string => {
       console.log(currency)
       if (["AUD", "CAD", "HKD", "TWD", "USD"].includes(currency)) {
@@ -62,7 +53,7 @@ const TransactionsPage: React.FC = (variant = "default") => {
       return `${amount} ${currency}`
     }
 
-    if (transactions.isLoading || paymentMethods.isLoading) {
+    if (transactions.isLoading || categories.isLoading || paymentMethods.isLoading) {
       return (
         <tr>Loading...</tr>
       )
@@ -70,6 +61,9 @@ const TransactionsPage: React.FC = (variant = "default") => {
 
     if (transactions.isError) {
       return <tr>Error: {transactions.error.message}</tr>
+    }
+    if (categories.isError) {
+      return <tr>Error: {categories.error.message}</tr>
     }
     if (paymentMethods.isError) {
       return <tr>Error: {paymentMethods.error.message}</tr>
@@ -94,7 +88,7 @@ const TransactionsPage: React.FC = (variant = "default") => {
               <div className="text-center text-sky-500">{transaction.description}</div>
             </td>
             <td className="p-2">
-              <div className="text-center">{CATEGORIES.find((category) => category.id === transaction.categoryId)?.name}</div>
+              <div className="text-center">{categories.data?.find((category) => category.id === transaction.categoryId)?.name}</div>
             </td>
             <td className="p-2">
               <div className="text-center">{paymentMethods.data?.find((payment_method) => payment_method.id === transaction.paymentMethodId)?.name}</div>
