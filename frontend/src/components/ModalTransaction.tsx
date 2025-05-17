@@ -4,6 +4,7 @@ import { Transaction, TransactionRequestParams } from "../types/transaction";
 import { useTransactions } from "../hooks/useTransactions";
 import { useCategories } from "../hooks/useCategories";
 import { usePaymentMethods } from "../hooks/usePaymentMethods";
+import { CURRENCIES, formatDate } from "../lib/utils";
 
 interface ModalTransactionProps {
   modalOpen: boolean,
@@ -20,28 +21,6 @@ interface FormState {
   categoryId: number;
   paymentMethodId: number;
 };
-
-const CURRENCIES = [
-  "AUD",
-  "CAD",
-  "CNY",
-  "EUR",
-  "GBP",
-  "HKD",
-  "INR",
-  "JPY",
-  "KRW",
-  "TWD",
-  "USD",
-];
-
-function formatDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-}
 
 function ModalTransaction({
   modalOpen,

@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Transaction } from "../types/transaction";
 import { useCategories } from "../hooks/useCategories";
 import { usePaymentMethods } from "../hooks/usePaymentMethods";
+import { formatCurrency } from "../lib/utils";
 
 const TransactionsPage: React.FC = (variant = "default") => {
 
@@ -29,30 +30,6 @@ const TransactionsPage: React.FC = (variant = "default") => {
   }
 
   const DataRows = () => {
-    const formatCurrency = (amount: number, currency: string): string => {
-      console.log(currency)
-      if (["AUD", "CAD", "HKD", "TWD", "USD"].includes(currency)) {
-        return `$${amount} ${currency}`
-      }
-      if (["CNY", "JPY"].includes(currency)) {
-        return `¥${amount} ${currency}`
-      }
-      if (currency === "EUR") {
-        return `€${amount} ${currency}`
-      }
-      if (currency == "GBP") {
-        return `£${amount} ${currency}`
-      }
-      if (currency == "INR") {
-        return `₹${amount} ${currency}`
-      }
-      if (currency == "KRW") {
-        return `₩${amount} ${currency}`
-      }
-
-      return `${amount} ${currency}`
-    }
-
     if (transactions.isLoading || categories.isLoading || paymentMethods.isLoading) {
       return (
         <tr>Loading...</tr>
