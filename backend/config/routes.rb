@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   get "/auth/:provider/callback", to: "sessions#create"
+  get "/auth/guest", to: "sessions#guest"
 
   namespace :api do
     namespace :v1 do
