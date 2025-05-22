@@ -1,5 +1,4 @@
 import UserMenu from "../components/UserMenu";
-import ThemeToggle from "../components/ThemeToggle";
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -40,7 +39,6 @@ const Header: React.FC<HeaderProps> = ({
 
           {/* Header: Right side */}
           <div className="flex items-center space-x-3">
-            <ThemeToggle />
             {/*  Divider */}
             <hr className="w-px h-6 bg-gray-200 dark:bg-gray-700/60 border-none" />
             <UserMenu align="right" />
